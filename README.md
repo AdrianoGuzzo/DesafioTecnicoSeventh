@@ -56,3 +56,36 @@ contexto de vídeo-monitoramento que atenda aos requisitos descritos abaixo:
 - Reciclar vídeos antigos
 -- /api/recycler/process/{days}
 -- /api/recycler/status
+ ### Exemplos de conteúdo Json (application/json)
+- Servidor
+```json
+{ 
+	id:"00A077F6-6ACF-41AF-942A-501BE8FB80F8", 
+	name:"Servidor 1", 
+	ip:"127.0.0.1", 
+	port:8080 
+}
+```
+
+- Vídeo (informações básicas)
+```json
+{ 
+	id:"11A077F6-6ACF-41AF-942A-501BE8FB80B8", 
+	description:"Video 1", 
+	sizeInBytes:"291923", 	
+}
+```
+
+- Reciclagem (status de processamento)
+```json
+{ 
+	status:"running", 	
+}
+```
+```json
+{ 
+	status:"not running", 	
+}
+```
+
+
