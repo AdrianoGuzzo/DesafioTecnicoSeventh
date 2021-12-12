@@ -12,6 +12,9 @@ namespace API
 {
     public class Startup
     {
+        private const string NAME_SYSTEM = "Desafio Técnico Seventh";
+        private static readonly string[] VERSIONS = { "v1" };
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,49 +26,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddApiVersioning(options =>
-            {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true;
-            });
-
-            services.AddVersionedApiExplorer(options =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
-
-            services.AddSwaggerGen(c =>
-            {
-                //exemplo de V2
-                //c.SwaggerDoc("v2", new OpenApiInfo
-                //{
-                //    Title = "Desafio Técnico Seventh",
-                //    Version = "v2",
-                //    Description = "Desafio Técnico Seventhr",
-                //    Contact = new OpenApiContact
-                //    {
-                //        Name = "seventh",
-                //        Url = new Uri("http://www.seventh.com.br")
-                //    }
-                //});
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Desafio Técnico Seventh",
-                    Version = "v1",
-                    Description = "Desafio Técnico Seventhr",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "seventh",
-                        Url = new Uri("http://www.seventh.com.br")
-                    }
-                });
-
-                c.IncludeXmlComments(System.String.Format(@"{0}API.xml",
-                System.AppDomain.CurrentDomain.BaseDirectory));
-
-            });
+            ConfigureServicesSwagger(services);
             Bootstrap.Start(services);
         }
 
@@ -87,14 +48,54 @@ namespace API
             {
                 endpoints.MapControllers();
             });
+            ConfigureSwagger(app);
+        }
+        private void ConfigureServicesSwagger(IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                foreach (var VERSION in VERSIONS)
+                {
+                    c.SwaggerDoc(VERSION, new OpenApiInfo
+                    {
+                        Title = NAME_SYSTEM,
+                        Version = VERSION,
+                        Description = NAME_SYSTEM,
+                        Contact = new OpenApiContact
+                        {
+                            Name = "seventh",
+                            Url = new Uri("http://www.seventh.com.br")
+                        }
+                    });
+                }
+
+                c.IncludeXmlComments(System.String.Format(@"{0}API.xml",
+                System.AppDomain.CurrentDomain.BaseDirectory));
+            });
+        }
+        private void ConfigureSwagger(IApplicationBuilder app)
+        {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                //exemplo de V2
-                //c.SwaggerEndpoint("/swagger/v2/swagger.json",
-                // "Desafio Técnico Seventhr v2");
-                c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                   "Desafio Técnico Seventhr v1");
+                foreach (var VERSION in VERSIONS)
+                {
+                    c.SwaggerEndpoint($"/swagger/{VERSION}/swagger.json",
+                     $"{NAME_SYSTEM} {VERSION}");
+                }
             });
         }
     }

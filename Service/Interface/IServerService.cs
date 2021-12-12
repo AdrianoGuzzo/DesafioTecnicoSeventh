@@ -6,8 +6,9 @@ using System.Text;
 
 namespace Service.Interface
 {
-    public interface IServerService: IServiceModelBase<ServerIn, ServerOut>
+    public interface IServerService : IServiceModelBase<ServerIn, ServerOut>
     {
         List<ServerOut> GetAll();
+        bool Available(string id);
     }
 }

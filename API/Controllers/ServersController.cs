@@ -28,28 +28,35 @@ namespace API.Controllers
         /// <summary>
         /// Atualizar um servidor
         /// </summary>  
-        [HttpPatch("{id}")]
-        public bool Patch(string id, ServerIn serverIn)
-            => _serverService.Update(id, serverIn);
+        [HttpPatch("{serverId}")]
+        public bool Patch(string serverId, ServerIn serverIn)
+            => _serverService.Update(serverId, serverIn);
         /// <summary>
         /// Remover um servidor (mudado o estado do Deleted=true)
         /// </summary>  
-        [HttpDelete("{id}")]
-        public bool Delete(string id)
-            => _serverService.Delete(id);
+        [HttpDelete("{serverId}")]
+        public bool Delete(string serverId)
+            => _serverService.Delete(serverId);
 
         /// <summary>
-        /// Traz uma lista de servidores
+        /// Listar todos os servidores
         /// </summary>  
         [HttpGet()]
-        [Route("GetAll")]
         public List<ServerOut> GetAll()
             => _serverService.GetAll();
         /// <summary>
         /// Recuperar um servidor
         /// </summary>  
-        [HttpGet("{id}")]
-        public ServerOut Get(string id)
-            => _serverService.GetModelById(id);
+        [HttpGet("{serverId}")]
+        public ServerOut Get(string serverId)
+            => _serverService.GetModelById(serverId);
+
+        /// <summary>
+        /// Checar disponibilidade de um servidor
+        /// </summary>  
+        [HttpGet()]
+        [Route("Available/{serverId}")]
+        public bool Available(string serverId)
+            => _serverService.Available(serverId);
     }
 }
