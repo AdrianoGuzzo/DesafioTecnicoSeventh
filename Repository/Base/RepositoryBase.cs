@@ -21,20 +21,20 @@ namespace Repository.Base
         {
             Entity entity = CreateFrom(modelId);
             videoMonitoringContext.Add(entity);
-            return SaveChange() > 0;
+            return SaveChanges() > 0;
         }
         public bool Update(string id, ModelIn modelId)
         {
             Entity entity = GetById(id);     
             entity.UpdateFrom(modelId);
-            return SaveChange() > 0;
+            return SaveChanges() > 0;
         }
 
         public bool Delete(string id)
         {
             Entity entity = GetById(id);
             entity.Deleted = true;
-            return SaveChange() > 0;
+            return SaveChanges() > 0;
         }
 
         public ModelOut GetModelById(string id)
@@ -59,7 +59,7 @@ namespace Repository.Base
             entity.CreateFrom(modelOut);
             return entity;
         }
-        private int SaveChange()
+        public int SaveChanges()
         {
             try
             {

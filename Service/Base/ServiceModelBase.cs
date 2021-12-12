@@ -13,23 +13,23 @@ namespace Service.Base
         {
             this.repository = repository;
         }
-        public bool Add(ModelIn modelId)
+        public virtual bool Add(ModelIn modelId)
         {
             modelId.ValidationModel();
             return repository.Add(modelId);
         }
-        public bool Update(string id, ModelIn modelId)
+        public virtual bool Update(string id, ModelIn modelId)
         {
             modelId.ValidationModel();
             return repository.Update(id, modelId);
         }
 
-        public bool Delete(string id)
+        public virtual bool Delete(string id)
         {
             return repository.Delete(id);
         }
 
-        public ModelOut GetModelById(string id)
+        public virtual ModelOut GetModelById(string id)
         => repository.GetModelById(id);     
     }
 }

@@ -12,8 +12,7 @@ namespace API
 {
     public class Startup
     {
-        private const string NAME_SYSTEM = "Desafio Técnico Seventh";
-        private static readonly string[] VERSIONS = { "v1" };
+
 
         public Startup(IConfiguration configuration)
         {
@@ -26,7 +25,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            ConfigureServicesSwagger(services);
+            Swagger.Settings.ConfigureServicesSwagger(services);
             Bootstrap.Start(services);
         }
 
@@ -48,55 +47,7 @@ namespace API
             {
                 endpoints.MapControllers();
             });
-            ConfigureSwagger(app);
-        }
-        private void ConfigureServicesSwagger(IServiceCollection services)
-        {
-            services.AddApiVersioning(options =>
-            {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true;
-            });
-
-            services.AddVersionedApiExplorer(options =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
-
-            services.AddSwaggerGen(c =>
-            {
-                foreach (var VERSION in VERSIONS)
-                {
-                    c.SwaggerDoc(VERSION, new OpenApiInfo
-                    {
-                        Title = NAME_SYSTEM,
-                        Version = VERSION,
-                        Description = NAME_SYSTEM,
-                        Contact = new OpenApiContact
-                        {
-                            Name = "seventh",
-                            Url = new Uri("http://www.seventh.com.br")
-                        }
-                    });
-                }
-
-                c.IncludeXmlComments(System.String.Format(@"{0}API.xml",
-                System.AppDomain.CurrentDomain.BaseDirectory));
-            });
-        }
-        private void ConfigureSwagger(IApplicationBuilder app)
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                foreach (var VERSION in VERSIONS)
-                {
-                    c.SwaggerEndpoint($"/swagger/{VERSION}/swagger.json",
-                     $"{NAME_SYSTEM} {VERSION}");
-                }
-            });
+            Swagger.Settings.ConfigureSwagger(app);
         }
     }
 }

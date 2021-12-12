@@ -16,21 +16,22 @@ namespace API.Controllers
     {
         private readonly IServerService _serverService;
         public ServersController(IServerService serverService)
-        {
-            _serverService = serverService;
-        }
+        => _serverService = serverService;
+
         /// <summary>
         /// Criar um novo servidor
         /// </summary>  
         [HttpPost]
         public bool Post(ServerIn serverIn)
             => _serverService.Add(serverIn);
+
         /// <summary>
         /// Atualizar um servidor
         /// </summary>  
         [HttpPatch("{serverId}")]
         public bool Patch(string serverId, ServerIn serverIn)
             => _serverService.Update(serverId, serverIn);
+
         /// <summary>
         /// Remover um servidor (mudado o estado do Deleted=true)
         /// </summary>  
@@ -44,6 +45,7 @@ namespace API.Controllers
         [HttpGet()]
         public List<ServerOut> GetAll()
             => _serverService.GetAll();
+
         /// <summary>
         /// Recuperar um servidor
         /// </summary>  

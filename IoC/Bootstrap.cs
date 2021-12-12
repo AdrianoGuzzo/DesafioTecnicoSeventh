@@ -19,12 +19,15 @@ namespace IoC
         private static void StartServices(IServiceCollection services)
         {
             services
-                .AddScoped<IServerService, ServerService>();
+                .AddScoped<IServerService, ServerService>()
+                .AddScoped<IVideoService, VideoService>()
+                .AddScoped<IFilerRepository, FilerRepository>();
         }
         private static void StartRepositories(IServiceCollection services)
         {
             services
-                .AddScoped<IServerRepository, ServerRepository>();
+                .AddScoped<IServerRepository, ServerRepository>()
+                .AddScoped<IVideoRepository, VideoRepository>();
         }
     }
 }
