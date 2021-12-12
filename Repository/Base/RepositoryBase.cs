@@ -1,12 +1,9 @@
 ﻿using DBContextSQLite;
-using DBContextSQLite.Entity;
 using DBContextSQLite.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Repository.Base
 {
@@ -35,7 +32,7 @@ namespace Repository.Base
             Entity entity = GetById(id);
             entity.Deleted = true;
             return SaveChanges() > 0;
-        }
+        }        
 
         public ModelOut GetModelById(string id)
         {
@@ -87,6 +84,6 @@ namespace Repository.Base
             }
         }
 
-
+        
     }
 }

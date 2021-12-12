@@ -1,10 +1,6 @@
-﻿using DBContextSQLite.Entity;
-using Model.In;
+﻿using Model.In;
 using Model.Out;
-using Repository.Base;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Repository.Interface
 {

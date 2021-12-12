@@ -1,9 +1,7 @@
 ﻿using Model.Out;
 using Repository.Interface;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Repository
 {

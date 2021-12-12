@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Model;
-using Model.In;
 using Model.Out;
 using Service.Interface;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace API.Controllers
 {
@@ -60,15 +57,19 @@ namespace API.Controllers
         public byte[] GetBinary(string serverId, string videoId)
         => _videoService.GetBinary(serverId, videoId);
 
-        [HttpGet]
+        [HttpPost]
         [Route("/api/v{version:apiVersion}/recycler/process/{days}")]
-        public byte[] RecyclerProcess(int day)
-        => throw new NotImplementedException();
+        public bool RecyclerProcess(int days)
+        {
+            var result = _videoService.RecyclerProcess(days);
+            this.HttpContext.Response.StatusCode = result ? (int)HttpStatusCode.Accepted : (int)HttpStatusCode.NotAcceptable; // I'm a teapot
+            return result;
+        }
 
         [HttpGet]
         [Route("/api/v{version:apiVersion}/recycler/status")]
-        public byte[] RecyclerStatus(int day)
-        => throw new NotImplementedException();
+        public RecyclerStatusOut GetRecyclerStatus()
+        => _videoService.GetRecyclerStatus();
 
     }
     public class VideoViewModel

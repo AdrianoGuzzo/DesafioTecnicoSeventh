@@ -11,5 +11,7 @@ namespace Service.Interface
         VideoOut GetModelById( string serverId, string id);        
         bool Delete(string id, string serverId);
         byte[] GetBinary(string serverId, string Id);
+        bool RecyclerProcess(int days);
+        RecyclerStatusOut GetRecyclerStatus();
     }
 }

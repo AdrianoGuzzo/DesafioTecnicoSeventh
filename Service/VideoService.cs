@@ -5,7 +5,7 @@ using Service.Base;
 using Service.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Service
 {
@@ -13,6 +13,7 @@ namespace Service
     {
         private readonly IFilerRepository _filerRepository;
         private readonly IVideoRepository _videoRepository;
+        private static Task<bool> TasksRecycler = null;
         public VideoService(IVideoRepository repository, IFilerRepository filerRepository) : base(repository)
         {
             _filerRepository = filerRepository;
@@ -36,11 +37,41 @@ namespace Service
 
         public byte[] GetBinary(string serverId, string Id)
         {
-            var videoOut= _videoRepository.GetModelById(serverId, Id);
+            var videoOut = _videoRepository.GetModelById(serverId, Id);
             return _filerRepository.GetBinary(videoOut.Id.ToString());
         }
 
         public VideoOut GetModelById(string serverId, string id)
             => _videoRepository.GetModelById(serverId, id);
+
+        public bool RecyclerProcess(int days)
+        {
+            if (TasksRecycler == null || TasksRecycler.IsCompleted)
+            {
+                var deadline = DateTime.UtcNow.AddDays(-days);
+                var videos = _videoRepository.GetOldVideosByDate(deadline);
+                TasksRecycler = Task.Run(() =>
+                {                    
+                    foreach (var video in videos)
+                    {
+                        _filerRepository.RemoveFile(video.Id.ToString());
+                        _videoRepository.HardDeleteMultiThreaded(video.Id.ToString());
+                    }
+                    return true;
+                });
+                return true;
+            }
+            return false;
+        }
+
+        public RecyclerStatusOut GetRecyclerStatus()
+        {
+            return new RecyclerStatusOut
+            {
+                Status = TasksRecycler == null || TasksRecycler.IsCompleted
+                ? "not running"
+                : "running"
+            };
+        }
     }
 }
