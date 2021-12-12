@@ -8,10 +8,10 @@ namespace DBContextSQLite
 {
     public class VideoMonitoringContext : DbContext
     {
-        public DbSet<Server> Veiculo { get; set; }
+        public DbSet<Server> Server { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=../../../veiculo.db");
+            optionsBuilder.UseSqlite("Data Source=./VideoMonitoring.db");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,6 +1,9 @@
 ﻿using DBContextSQLite;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Repository;
+using Repository.Interface;
+using Service;
+using Service.Interface;
 
 namespace IoC
 {
@@ -9,22 +12,19 @@ namespace IoC
         public static void Start(IServiceCollection services)
         {
             services.AddDbContext<VideoMonitoringContext>();
-            //services.AddSingleton<INotificationFirebase, NotificationFirebase>();
 
-            //StartServices(services);
-            //StartRepositories(services);
+            StartServices(services);
+            StartRepositories(services);
         }
         private static void StartServices(IServiceCollection services)
         {
-            //services
-            //    .AddScoped<IUserService, UserService>()
-            //    .AddScoped<INotificationFirebaseService, NotificationFirebaseService>();
+            services
+                .AddScoped<IServerService, ServerService>();
         }
         private static void StartRepositories(IServiceCollection services)
         {
-            //services
-            //    .AddScoped<IUserRepository, UserRepository>()
-            //    .AddScoped<ITokenFirebaseRepository, TokenFirebaseRepository>();
+            services
+                .AddScoped<IServerRepository, ServerRepository>();
         }
     }
 }
