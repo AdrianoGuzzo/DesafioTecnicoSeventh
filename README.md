@@ -2,7 +2,7 @@
 - Esse projeto foi desenvolvido usando ORM Entity Framework com o Banco SQLlite, não sendo necessário instalar client, pois a base foi criada local no próprio projeto, assim facilitando o build do mesmo.
 - Foi implementado Swagger para documentar os endpoints requeridos.
 - Os arquivos são salvos local no projeto.
-Espero que gostem do meu jeito de programar :blush: :blush: :blush:
+#### Espero que gostem do meu jeito de programar :blush: :blush: :blush:
 
 
 # PROVA TÉCNICA - .NET/C# DEVELOPER
