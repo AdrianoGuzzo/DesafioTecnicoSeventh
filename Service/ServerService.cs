@@ -40,7 +40,7 @@ namespace Service
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao tentar connectar no servidor", ex);
+                throw new Exception("Erro ao tentar connectar ao servidor", ex);
             }         
         }
 

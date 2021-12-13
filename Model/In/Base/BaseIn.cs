@@ -11,8 +11,8 @@ namespace Model.In.Base
         public virtual bool ValidationModel()
         {
             var result = new List<ValidationResult>();
-            var validationContext = new ValidationContext(this);
-            Validator.TryValidateObject(this, validationContext, result);
+            var validationContext = new ValidationContext(this, null, null);
+            Validator.TryValidateObject(this, validationContext, result, true);            
             if (this is IValidatableObject) (this as IValidatableObject).Validate(validationContext);
             ArgumentException ex = null;
             result.ForEach((item) =>

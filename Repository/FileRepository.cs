@@ -1,13 +1,19 @@
-﻿using Model.Out;
+﻿using Microsoft.Extensions.Configuration;
+using Model.Out;
 using Repository.Interface;
 using System;
 using System.IO;
 
 namespace Repository
 {
-    public class FilerRepository : IFilerRepository
+    public class FileRepository : IFileRepository
     {
-        const string path = "./Video/";
+        private readonly string path;
+
+        public FileRepository(IConfiguration configuration)
+        {
+            path = configuration.GetSection("Repository").GetSection("PathFile").Value;
+        }
 
         public void RemoveFile(string fileName)
         {
@@ -49,6 +55,6 @@ namespace Repository
 
             return bytes;
         }
-      
+
     }
 }

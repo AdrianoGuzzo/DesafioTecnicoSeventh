@@ -11,23 +11,29 @@ namespace Service
 {
     public class VideoService : ServiceModelBase<VideoIn, VideoOut>, IVideoService
     {
-        private readonly IFilerRepository _filerRepository;
+        private readonly IFileRepository _filerRepository;
         private readonly IVideoRepository _videoRepository;
         private static Task<bool> TasksRecycler = null;
-        public VideoService(IVideoRepository repository, IFilerRepository filerRepository) : base(repository)
+        public VideoService(IVideoRepository repository, IFileRepository filerRepository) : base(repository)
         {
             _filerRepository = filerRepository;
             _videoRepository = repository;
         }
-        public bool Add(string serverId, string description, string FileInBase64)
+        public bool Add(string serverId, string description, string fileInBase64)
         {
             var videoIn = new VideoIn(serverId, description);
-            videoIn.ValidationModel();
-
-            var fileOut = _filerRepository.SaveFile(FileInBase64);
+            var fileOut = _filerRepository.SaveFile(fileInBase64);
             videoIn.SetFileInfo(fileOut);
-
-            return _videoRepository.Add(videoIn);
+            try
+            {
+                videoIn.ValidationModel();
+                return _videoRepository.Add(videoIn);
+            }
+            catch (Exception ex)
+            {
+                _filerRepository.RemoveFile(fileOut.Id.ToString());
+                throw ex;
+            }
         }
         public bool Delete(string id, string serverId)
         => _videoRepository.Delete(id, serverId);
@@ -51,7 +57,7 @@ namespace Service
                 var deadline = DateTime.UtcNow.AddDays(-days);
                 var videos = _videoRepository.GetOldVideosByDate(deadline);
                 TasksRecycler = Task.Run(() =>
-                {                    
+                {
                     foreach (var video in videos)
                     {
                         _filerRepository.RemoveFile(video.Id.ToString());

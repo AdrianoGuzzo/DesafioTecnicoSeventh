@@ -2,7 +2,8 @@
 
 namespace Repository.Interface
 {
-    public interface IFilerRepository
+    public interface IFileRepository
+
     {
         FileOut SaveFile(string base64);
         void RemoveFile(string fileName);

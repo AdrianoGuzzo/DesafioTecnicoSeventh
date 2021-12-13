@@ -21,7 +21,7 @@ namespace IoC
             services
                 .AddScoped<IServerService, ServerService>()
                 .AddScoped<IVideoService, VideoService>()
-                .AddScoped<IFilerRepository, FilerRepository>();
+                .AddScoped<IFileRepository, FileRepository>();
         }
         private static void StartRepositories(IServiceCollection services)
         {
