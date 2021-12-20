@@ -31,7 +31,7 @@ namespace Repository
         {
             var entity = await GetVideo(id, serverId);
             entity.Deleted = true;
-            return (await SaveChanges()) > 0;
+            return true;
         }
 
         private async Task<Video> GetVideo(string id, string serverId)

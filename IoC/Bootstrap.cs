@@ -1,4 +1,5 @@
 ﻿using DBContextSQLite;
+using DBContextSQLite.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
 using Repository.Interface;
@@ -11,7 +12,8 @@ namespace IoC
     {
         public static void Start(IServiceCollection services)
         {
-            services.AddDbContext<VideoMonitoringContext>();
+            services.AddDbContext<VideoMonitoringContext>()
+                    .AddScoped<IUnitOfWork, UnitOfWork>();
 
             StartServices(services);
             StartRepositories(services);

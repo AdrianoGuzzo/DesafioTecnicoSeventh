@@ -1,3 +1,4 @@
+using DBContextSQLite.Interface;
 using IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,13 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.Use(async (context, next) =>
+            {
+                await next.Invoke();
+                var unitOfWork = (IUnitOfWork)context.RequestServices.GetService<IUnitOfWork>();
+                await unitOfWork.Commit();
+            });
 
             app.UseHttpsRedirection();
 
