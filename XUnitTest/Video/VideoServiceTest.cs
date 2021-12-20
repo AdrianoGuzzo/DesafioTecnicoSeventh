@@ -23,18 +23,18 @@ namespace XUnitTest.Video
         }
 
         [Fact]
-        public void AddVideoSuccess()
+        public async void AddVideoSuccess()
         {
             Faker faker = new Faker();
             var base64 = faker.Name.Random.String(1000);
             Mock<IVideoRepository> mockVideoRepository = new Mock<IVideoRepository>();
             Mock<IFileRepository> mockFileRepository = new Mock<IFileRepository>();
-            mockVideoRepository.Setup(x => x.Add(It.IsAny<VideoIn>())).Returns(true);
-            mockFileRepository.Setup(x => x.SaveFile(base64)).Returns(new FileOut(faker.Random.Guid(), faker.Random.Int(min: 0)));
+            mockVideoRepository.Setup(x => x.AddAsync(It.IsAny<VideoIn>())).ReturnsAsync(true);
+            mockFileRepository.Setup(x => x.SaveFileAsync(base64)).ReturnsAsync(new FileOut(faker.Random.Guid(), faker.Random.Int(min: 0)));
             IVideoService videoService =
                 new VideoService(mockVideoRepository.Object, mockFileRepository.Object);
 
-            var success = videoService.Add(faker.Random.Guid().ToString(), faker.Name.Random.Words(10), base64);
+            var success = await videoService.AddAsync(faker.Random.Guid().ToString(), faker.Name.Random.Words(10), base64);
 
             Assert.True(success);
         }

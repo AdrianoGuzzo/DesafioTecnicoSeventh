@@ -1,13 +1,14 @@
 ﻿using Model.Out;
+using System.Threading.Tasks;
 
 namespace Repository.Interface
 {
     public interface IFileRepository
 
     {
-        FileOut SaveFile(string base64);
+        Task<FileOut> SaveFileAsync(string base64);
         void RemoveFile(string fileName);
-        string GetFileInBase64(string fileName);
-        byte[] GetBinary(string fileName);
+        Task<string> GetFileInBase64Async(string fileName);
+        Task<byte[]> GetBinaryAsync(string fileName);
     }
 }

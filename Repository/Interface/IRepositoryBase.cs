@@ -1,10 +1,12 @@
-﻿namespace Repository.Interface
+﻿using System.Threading.Tasks;
+
+namespace Repository.Interface
 {
     public interface IRepositoryBase<ModelIn, ModelOut>
     {
-        bool Add(ModelIn modelId);
-        bool Update(string id, ModelIn modelId);
-        bool Delete(string id);  
-        ModelOut GetModelById(string id);
+        Task<bool> AddAsync(ModelIn modelId);
+        Task<bool> UpdateAsync(string id, ModelIn modelId);
+        Task<bool> DeleteAsync(string id);
+        Task<ModelOut> GetModelByIdAsync(string id);
     }
 }

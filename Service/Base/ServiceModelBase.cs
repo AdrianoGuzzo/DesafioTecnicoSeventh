@@ -1,5 +1,6 @@
 ﻿using Model.In.Base;
 using Repository.Interface;
+using System.Threading.Tasks;
 
 namespace Service.Base
 {
@@ -10,22 +11,22 @@ namespace Service.Base
         {
             this.repository = repository;
         }
-        public virtual bool Add(ModelIn modelId)
+        public virtual async Task<bool> AddAsync(ModelIn modelId)
         {
             modelId.ValidationModel();
-            return repository.Add(modelId);
+            return await repository.AddAsync(modelId);
         }
-        public virtual bool Update(string id, ModelIn modelId)
+        public virtual async Task<bool> UpdateAsync(string id, ModelIn modelId)
         {
             modelId.ValidationModel();
-            return repository.Update(id, modelId);
+            return await repository.UpdateAsync(id, modelId);
         }
 
-        public virtual bool Delete(string id)
-        => repository.Delete(id);
+        public virtual async Task<bool> DeleteAsync(string id)
+        => await repository.DeleteAsync(id);
 
-        public virtual ModelOut GetModelById(string id)
-        => repository.GetModelById(id);
+        public virtual async Task<ModelOut> GetModelByIdAsync(string id)
+        => await repository.GetModelByIdAsync(id);
 
 
     }

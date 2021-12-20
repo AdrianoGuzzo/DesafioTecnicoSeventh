@@ -19,15 +19,15 @@ namespace Service
             _filerRepository = filerRepository;
             _videoRepository = repository;
         }
-        public bool Add(string serverId, string description, string fileInBase64)
+        public async Task<bool> AddAsync(string serverId, string description, string fileInBase64)
         {
             var videoIn = new VideoIn(serverId, description);
-            var fileOut = _filerRepository.SaveFile(fileInBase64);
+            var fileOut = await _filerRepository.SaveFileAsync(fileInBase64);
             videoIn.SetFileInfo(fileOut);
             try
             {
                 videoIn.ValidationModel();
-                return _videoRepository.Add(videoIn);
+                return await _videoRepository.AddAsync(videoIn);
             }
             catch (Exception ex)
             {
@@ -35,20 +35,20 @@ namespace Service
                 throw ex;
             }
         }
-        public bool Delete(string id, string serverId)
-        => _videoRepository.Delete(id, serverId);
+        public async Task<bool> DeleteAsync(string id, string serverId)
+        => await _videoRepository.DeleteAsync(id, serverId);
 
         public List<VideoOut> GetAllByServer(string serverId)
          => _videoRepository.GetAllByServer(serverId);
 
-        public byte[] GetBinary(string serverId, string Id)
+        public async Task<byte[]> GetBinaryAsync(string serverId, string Id)
         {
-            var videoOut = _videoRepository.GetModelById(serverId, Id);
-            return _filerRepository.GetBinary(videoOut.Id.ToString());
+            var videoOut = await _videoRepository.GetModelByIdAsync(serverId, Id);
+            return await _filerRepository.GetBinaryAsync(videoOut.Id.ToString());
         }
 
-        public VideoOut GetModelById(string serverId, string id)
-            => _videoRepository.GetModelById(serverId, id);
+        public async Task<VideoOut> GetModelByIdAsync(string serverId, string id)
+            => await _videoRepository.GetModelByIdAsync(serverId, id);
 
         public bool RecyclerProcess(int days)
         {

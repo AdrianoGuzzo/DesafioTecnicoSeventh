@@ -3,7 +3,7 @@ using DBContextSQLite.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Repository.Base
 {
@@ -14,36 +14,36 @@ namespace Repository.Base
         {
             this.videoMonitoringContext = videoMonitoringContext;
         }
-        public bool Add(ModelIn modelId)
+        public async Task<bool> AddAsync(ModelIn modelId)
         {
             Entity entity = CreateFrom(modelId);
-            videoMonitoringContext.Add(entity);
-            return SaveChanges() > 0;
+            await videoMonitoringContext.AddAsync(entity);
+            return (await SaveChanges()) > 0;
         }
-        public bool Update(string id, ModelIn modelId)
+        public async Task<bool> UpdateAsync(string id, ModelIn modelId)
         {
-            Entity entity = GetById(id);     
+            Entity entity = await GetById(id);
             entity.UpdateFrom(modelId);
-            return SaveChanges() > 0;
+            return (await SaveChanges()) > 0;
         }
 
-        public bool Delete(string id)
+        public async Task<bool> DeleteAsync(string id)
         {
-            Entity entity = GetById(id);
+            Entity entity = await GetById(id);
             entity.Deleted = true;
-            return SaveChanges() > 0;
-        }        
+            return (await SaveChanges()) > 0;
+        }
 
-        public ModelOut GetModelById(string id)
+        public async Task<ModelOut> GetModelByIdAsync(string id)
         {
-            Entity entity = GetById(id);
+            Entity entity = await GetById(id);
             return entity.MapperToOut();
         }
 
-        private Entity GetById(string id)
+        private async Task<Entity> GetById(string id)
         {
-            Entity entity = videoMonitoringContext.Set<Entity>()
-                .SingleOrDefault(x => x.Id == Guid.Parse(id) && !x.Deleted);
+            Entity entity = await videoMonitoringContext.Set<Entity>()
+                .SingleOrDefaultAsync(x => x.Id == Guid.Parse(id) && !x.Deleted);
             if (entity == null)
                 throw new Exception("Entidade não encontrada");
             return entity;
@@ -56,11 +56,11 @@ namespace Repository.Base
             entity.CreateFrom(modelOut);
             return entity;
         }
-        public int SaveChanges()
+        public async Task<int> SaveChanges()
         {
             try
             {
-                return videoMonitoringContext.SaveChanges();
+                return await videoMonitoringContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -84,6 +84,6 @@ namespace Repository.Base
             }
         }
 
-        
+
     }
 }

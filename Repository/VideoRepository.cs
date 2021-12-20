@@ -8,6 +8,8 @@ using Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -20,23 +22,23 @@ namespace Repository
             _configuration = configuration;
         }
 
-        public VideoOut GetModelById(string serverId, string id)
+        public async Task<VideoOut> GetModelByIdAsync(string serverId, string id)
         {
-            var entity = GetVideo(id, serverId);
+            var entity = await GetVideo(id, serverId);
             return entity.MapperToOut();
         }
-        public bool Delete(string id, string serverId)
+        public async Task<bool> DeleteAsync(string id, string serverId)
         {
-            var entity = GetVideo(id, serverId);
+            var entity = await GetVideo(id, serverId);
             entity.Deleted = true;
-            return SaveChanges() > 0;
+            return (await SaveChanges()) > 0;
         }
 
-        private Video GetVideo(string id, string serverId)
+        private async Task<Video> GetVideo(string id, string serverId)
         {
-            var entity = videoMonitoringContext.Video
+            var entity = await videoMonitoringContext.Video
                    .Where(x => x.Id == Guid.Parse(id) && x.ServerId == Guid.Parse(serverId) && !x.Deleted)
-                   .FirstOrDefault();
+                   .FirstOrDefaultAsync();
             if (entity == null)
                 throw new Exception("Vídeo não encontrado");
             return entity;

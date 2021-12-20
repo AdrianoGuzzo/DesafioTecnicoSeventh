@@ -1,16 +1,17 @@
 ﻿using Model.In;
 using Model.Out;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Interface
 {
     public interface IVideoService : IServiceModelBase<VideoIn, VideoOut>
     {
-        bool Add(string serverId, string description, string fileInBase64);
+        Task<bool> AddAsync(string serverId, string description, string fileInBase64);
         List<VideoOut> GetAllByServer(string serverId);
-        VideoOut GetModelById( string serverId, string id);        
-        bool Delete(string id, string serverId);
-        byte[] GetBinary(string serverId, string Id);
+        Task<VideoOut> GetModelByIdAsync(string serverId, string id);
+        Task<bool> DeleteAsync(string id, string serverId);
+        Task<byte[]> GetBinaryAsync(string serverId, string Id);
         bool RecyclerProcess(int days);
         RecyclerStatusOut GetRecyclerStatus();
     }

@@ -21,18 +21,18 @@ namespace XUnitTest.Server
             output.WriteLine("Construtor");
         }
         [Fact]
-        public void AddServerSuccess()
+        public async void AddServerSuccess()
         {
             Mock<IServerRepository> mockServerRepository = new Mock<IServerRepository>();
             var serverIn = ServerInBuilder.New().Build();
-            mockServerRepository.Setup(x => x.Add(serverIn)).Returns(true);
+            mockServerRepository.Setup(x => x.AddAsync(serverIn)).ReturnsAsync(true);
             IServerService serverService =
                 new ServerService(mockServerRepository.Object);
 
-            var success = serverService.Add(serverIn);
+            var success = await serverService.AddAsync(serverIn);
 
             mockServerRepository
-                .Verify(x => x.Add(serverIn), Times.Exactly(1));
+                .Verify(x => x.AddAsync(serverIn), Times.Exactly(1));
             Assert.True(success);
         }
 
@@ -44,29 +44,29 @@ namespace XUnitTest.Server
         {
             Mock<IServerRepository> mockServerRepository = new Mock<IServerRepository>();
             var serverIn = ServerInBuilder.New().WithIp(IncorrectIpFormat).Build();
-            mockServerRepository.Setup(x => x.Add(serverIn)).Returns(true);
+            mockServerRepository.Setup(x => x.AddAsync(serverIn)).ReturnsAsync(true);
             IServerService serverService =
                 new ServerService(mockServerRepository.Object);
 
-            Assert.Throws<ArgumentException>(() => serverService.Add(serverIn));
+            Assert.ThrowsAsync<ArgumentException>(() => serverService.AddAsync(serverIn));
         }
 
 
         [Fact]
-        public void UpdateServerSuccess()
+        public async void UpdateServerSuccess()
         {
             Faker faker = new Faker();
             var id = faker.Random.Guid().ToString();
             Mock<IServerRepository> mockServerRepository = new Mock<IServerRepository>();
             var serverIn = ServerInBuilder.New().Build();
-            mockServerRepository.Setup(x => x.Update(id, serverIn)).Returns(true);
+            mockServerRepository.Setup(x => x.UpdateAsync(id, serverIn)).ReturnsAsync(true);
             IServerService serverService =
                 new ServerService(mockServerRepository.Object);
 
-            var success = serverService.Update(id, serverIn);
+            var success = await serverService.UpdateAsync(id, serverIn);
 
             mockServerRepository
-                .Verify(x => x.Update(id, serverIn), Times.Exactly(1));
+                .Verify(x => x.UpdateAsync(id, serverIn), Times.Exactly(1));
             Assert.True(success);
         }
 
@@ -80,11 +80,11 @@ namespace XUnitTest.Server
             var id = faker.Random.Guid().ToString();
             Mock<IServerRepository> mockServerRepository = new Mock<IServerRepository>();
             var serverIn = ServerInBuilder.New().WithIp(IncorrectIpFormat).Build();
-            mockServerRepository.Setup(x => x.Update(id, serverIn)).Returns(true);
+            mockServerRepository.Setup(x => x.UpdateAsync(id, serverIn)).ReturnsAsync(true);
             IServerService serverService =
                 new ServerService(mockServerRepository.Object);
 
-            Assert.Throws<ArgumentException>(() => serverService.Update(id, serverIn));
+            Assert.ThrowsAsync<ArgumentException>(() => serverService.UpdateAsync(id, serverIn));
 
         }
     }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Service
 {
@@ -22,26 +23,26 @@ namespace Service
             => _serverRepository.GetAll();
 
 
-        public bool Available(string serverId)
+        public async Task<bool> AvailableAsync(string serverId)
         {
-            var server = _serverRepository.GetModelById(serverId);
-            return PingHost(server.Ip, server.Port);
+            var server = await _serverRepository.GetModelByIdAsync(serverId);
+            return await PingHostAsync(server.Ip, server.Port);
         }
 
-        public bool PingHost(string ip, int port)
+        public async Task<bool> PingHostAsync(string ip, int port)
         {
             try
             {
                 IPAddress ipAddress = IPAddress.Parse(ip);
                 var tcpClient = new TcpClient();
-                tcpClient.Connect(ipAddress, port);
+                await tcpClient.ConnectAsync(ipAddress, port);
                 //using (var client = new TcpClient(ipAddress, portNumber))
                 return tcpClient.Connected;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao tentar connectar ao servidor", ex);
-            }         
+            }
         }
 
     }

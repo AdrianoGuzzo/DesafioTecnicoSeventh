@@ -5,6 +5,7 @@ using Service.Interface;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -24,23 +25,23 @@ namespace API.Controllers
         /// </summary>  
         [HttpPost]
         [Route("/api/v{version:apiVersion}/servers/{serverId}/videos")]
-        public bool Post(string serverId, VideoViewModel videoViewModel)
-            => _videoService.Add(serverId, videoViewModel.Description, videoViewModel.FileInBase64);
+        public async Task<bool> Post(string serverId, VideoViewModel videoViewModel)
+            => await _videoService.AddAsync(serverId, videoViewModel.Description, videoViewModel.FileInBase64);
 
         /// <summary>
         /// Remover um vídeo existente (mudado o estado do Deleted=true)
         /// </summary>  
         [HttpDelete("/api/v{version:apiVersion}/servers/{serverId}/videos/{videoId}")]
-        public bool Delete(string serverId, string videoId)
-            => _videoService.Delete(videoId);
+        public async Task<bool> Delete(string serverId, string videoId)
+            => await _videoService.DeleteAsync(videoId);
 
         /// <summary>
         /// Recuperar dados cadastrais de um vídeo
         /// </summary>  
         [HttpGet]
         [Route("/api/v{version:apiVersion}/servers/{serverId}/videos/{videoId}")]
-        public VideoOut Get(string serverId, string videoId)
-            => _videoService.GetModelById(serverId, videoId);
+        public async Task<VideoOut> Get(string serverId, string videoId)
+            => await _videoService.GetModelByIdAsync(serverId, videoId);
 
         /// <summary>
         /// Listar todos os vídeos de um servidor 
@@ -54,8 +55,8 @@ namespace API.Controllers
         /// </summary> 
         [HttpGet]
         [Route("/api/v{version:apiVersion}/servers/{serverId}/videos/{videoId}/binary")]
-        public byte[] GetBinary(string serverId, string videoId)
-        => _videoService.GetBinary(serverId, videoId);
+        public async Task<byte[]> GetBinary(string serverId, string videoId)
+        => await _videoService.GetBinaryAsync(serverId, videoId);
 
         [HttpPost]
         [Route("/api/v{version:apiVersion}/recycler/process/{days}")]

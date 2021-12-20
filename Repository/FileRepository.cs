@@ -3,6 +3,7 @@ using Model.Out;
 using Repository.Interface;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -21,7 +22,7 @@ namespace Repository
             File.Delete(fullPath + fileName);
         }
 
-        public FileOut SaveFile(string base64)
+        public async Task<FileOut> SaveFileAsync(string base64)
         {
             try
             {
@@ -30,7 +31,11 @@ namespace Repository
                 var idFile = Guid.NewGuid();
                 if (!Directory.Exists(fullPath))
                     Directory.CreateDirectory(fullPath);
-                File.WriteAllBytes($@"{fullPath}{idFile}", file);
+   
+                using (FileStream stream = File.Open($@"{fullPath}{idFile}", FileMode.OpenOrCreate))
+                {                 
+                    await stream.WriteAsync(file,0,file.Length);
+                }
 
                 var fileInfo = new FileInfo(fullPath + idFile);
                 long length = fileInfo.Length;
@@ -42,18 +47,24 @@ namespace Repository
             }
         }
 
-        public string GetFileInBase64(string fileName)
+        public async Task<string> GetFileInBase64Async(string fileName)
         {
-            Byte[] bytes = GetBinary(fileName);
+            Byte[] bytes = await GetBinaryAsync(fileName);
             String file = Convert.ToBase64String(bytes);
             return file;
         }
-        public byte[] GetBinary(string fileName)
+        public async Task<byte[]> GetBinaryAsync(string fileName)
         {
-            var fullPath = Path.GetFullPath(path);
-            byte[] bytes = File.ReadAllBytes(fullPath + fileName);
+            var fullPath = Path.GetFullPath(path);           
 
-            return bytes;
+            byte[] result;
+            using (FileStream stream = File.Open(fullPath + fileName, FileMode.Open))
+            {
+                result = new byte[stream.Length];
+                await stream.ReadAsync(result, 0, (int)stream.Length);
+            }
+
+            return result;
         }
 
     }
