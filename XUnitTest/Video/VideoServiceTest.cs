@@ -5,9 +5,6 @@ using Moq;
 using Repository.Interface;
 using Service;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,8 +13,12 @@ namespace XUnitTest.Video
     public class VideoServiceTest
     {
         private readonly ITestOutputHelper _output;
+        private readonly Mock<IVideoRepository> _mockVideoRepository ;
+        private readonly Mock<IFileRepository> _mockFileRepository;
         public VideoServiceTest(ITestOutputHelper output)
         {
+            _mockVideoRepository = new Mock<IVideoRepository>();
+            _mockFileRepository = new Mock<IFileRepository>();
             _output = output;
             output.WriteLine("Construtor");
         }
@@ -26,13 +27,12 @@ namespace XUnitTest.Video
         public async void AddVideoSuccess()
         {
             Faker faker = new Faker();
-            var base64 = faker.Name.Random.String(1000);
-            Mock<IVideoRepository> mockVideoRepository = new Mock<IVideoRepository>();
-            Mock<IFileRepository> mockFileRepository = new Mock<IFileRepository>();
-            mockVideoRepository.Setup(x => x.AddAsync(It.IsAny<VideoIn>())).ReturnsAsync(true);
-            mockFileRepository.Setup(x => x.SaveFileAsync(base64)).ReturnsAsync(new FileOut(faker.Random.Guid(), faker.Random.Int(min: 0)));
+            var base64 = faker.Name.Random.String(1000);      
+
+            _mockVideoRepository.Setup(x => x.AddAsync(It.IsAny<VideoIn>())).ReturnsAsync(true);
+            _mockFileRepository.Setup(x => x.SaveFileAsync(base64)).ReturnsAsync(new FileOut(faker.Random.Guid(), faker.Random.Int(min: 0)));
             IVideoService videoService =
-                new VideoService(mockVideoRepository.Object, mockFileRepository.Object);
+                new VideoService(_mockVideoRepository.Object, _mockFileRepository.Object);
 
             var success = await videoService.AddAsync(faker.Random.Guid().ToString(), faker.Name.Random.Words(10), base64);
 
